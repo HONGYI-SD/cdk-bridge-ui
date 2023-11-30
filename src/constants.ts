@@ -77,6 +77,13 @@ export const TOKEN_BLACKLIST = [
   "0x4F9A0e7FD2Bf6067db6994CF12E4495Df938E6e9",
 ];
 
+export const L1GASTOKEN_ADDRESS = "0x82109a709138A2953C720D3d775168717b668ba6";
+export const L2WRAPPERETH_ADDRESS = "0x82109a709138A2953C720D3d775168717b668ba6";
+
+
+
+let L1CHAINID = 1;
+let L2CHAINID = 1;
 export const getChains = ({
   ethereum,
   polygonZkEVM,
@@ -100,12 +107,15 @@ export const getChains = ({
     ethereum.poeContractAddress,
     ethereumProvider
   );
-
+  
   return Promise.all([
     ethereumProvider.getNetwork().catch(() => Promise.reject(ProviderError.Ethereum)),
     polygonZkEVMProvider.getNetwork().catch(() => Promise.reject(ProviderError.PolygonZkEVM)),
     poeContract.networkName().catch(() => Promise.reject(ProviderError.Ethereum)),
-  ]).then(([ethereumNetwork, polygonZkEVMNetwork, polygonZkEVMNetworkName]) => [
+  ]).then(([ethereumNetwork, polygonZkEVMNetwork, polygonZkEVMNetworkName]) => {
+    L1CHAINID = ethereumNetwork.chainId;
+    L2CHAINID = polygonZkEVMNetwork.chainId;
+    return [
     {
       bridgeContractAddress: ethereum.bridgeContractAddress,
       chainId: ethereumNetwork.chainId,
@@ -131,24 +141,43 @@ export const getChains = ({
       name: polygonZkEVMNetworkName,
       nativeCurrency: {
         decimals: 18,
-        name: "Ether",
-        symbol: "ETH",
+        name: "SHIB",
+        symbol: "SHIB",
       },
       networkId: polygonZkEVM.networkId,
       provider: polygonZkEVMProvider,
     },
-  ]);
+  ]});
 };
 
 export const getEtherToken = (chain: Chain): Token => {
-  return {
-    address: ethers.constants.AddressZero,
-    chainId: chain.chainId,
-    decimals: 18,
-    logoURI: ETH_TOKEN_LOGO_URI,
-    name: "Ether",
-    symbol: "ETH",
-  };
+  if (chain.chainId === L1CHAINID){
+    return {
+      address: ethers.constants.AddressZero,
+      chainId: chain.chainId,
+      decimals: 18,
+      logoURI: ETH_TOKEN_LOGO_URI,
+      name: "Ether",
+      symbol: "ETH",
+      wrappedToken: {
+        address: L2WRAPPERETH_ADDRESS,
+        chainId: L2CHAINID,
+      }
+    }
+  }else{
+    return {
+      address: ethers.constants.AddressZero,
+      chainId: chain.chainId,
+      decimals: 18,
+      logoURI: ETH_TOKEN_LOGO_URI,
+      name: "SHIB",
+      symbol: "SHIB",
+      wrappedToken: {
+        address: L1GASTOKEN_ADDRESS,
+        chainId: L1CHAINID,
+      }
+    }
+  }
 };
 
 export const getUsdcToken = ({
@@ -165,4 +194,8 @@ export const getUsdcToken = ({
     "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
   name: "USD Coin",
   symbol: "USDC",
+  wrappedToken: {
+    address: "",
+    chainId: 1,
+  }
 });

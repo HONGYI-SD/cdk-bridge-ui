@@ -9,17 +9,22 @@ import { useTokenBalanceStyles } from "src/views/shared/token-balance/token-bala
 import { Typography, TypographyProps } from "src/views/shared/typography/typography.view";
 
 interface TokenBalanceProps {
+  chainId: number;
   spinnerSize: number;
   token: Token;
   typographyProps: TypographyProps;
 }
 
-export const TokenBalance: FC<TokenBalanceProps> = ({ spinnerSize, token, typographyProps }) => {
+export const TokenBalance: FC<TokenBalanceProps> = ({chainId, spinnerSize, token, typographyProps }) => {
   const classes = useTokenBalanceStyles();
+  let symbol =token.symbol;
+  if (token.symbol === "ETH" && chainId !== token.chainId){
+    symbol = "WETH"
+  }
   const loader = (
     <div className={classes.loader}>
       <Spinner size={spinnerSize} />
-      <Typography {...typographyProps}>&nbsp;{token.symbol}</Typography>
+      <Typography {...typographyProps}>&nbsp;{symbol}</Typography>
     </div>
   );
 
@@ -41,7 +46,7 @@ export const TokenBalance: FC<TokenBalanceProps> = ({ spinnerSize, token, typogr
       );
 
       return (
-        <Typography {...typographyProps}>{`${formattedTokenAmount} ${token.symbol}`}</Typography>
+        <Typography {...typographyProps}>{`${formattedTokenAmount} ${symbol}`}</Typography>
       );
     }
   }

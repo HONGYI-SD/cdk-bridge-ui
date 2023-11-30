@@ -106,7 +106,7 @@ const TokensProvider: FC<PropsWithChildren> = (props) => {
         otherChain.bridgeContractAddress,
         otherChain.provider
       );
-
+      
       return bridgeContract.precalculatedWrapperAddress(
         nativeChain.networkId,
         token.address,
@@ -129,6 +129,7 @@ const TokensProvider: FC<PropsWithChildren> = (props) => {
       originNetwork: number;
       originTokenAddress: string;
     }> => {
+      
       const bridgeContract = Bridge__factory.connect(chain.bridgeContractAddress, chain.provider);
 
       return bridgeContract.wrappedTokenToTokenInfo(address).then((tokenInfo) => {
@@ -199,7 +200,7 @@ const TokensProvider: FC<PropsWithChildren> = (props) => {
         .head(trustWalletLogoUrl)
         .then(() => trustWalletLogoUrl)
         .catch(() => tokenIconDefaultUrl);
-
+      
       return getNativeTokenInfo({ address, chain })
         .then(({ originNetwork, originTokenAddress }) => {
           // the provided address belongs to a wrapped token
@@ -258,10 +259,13 @@ const TokensProvider: FC<PropsWithChildren> = (props) => {
       );
 
       if (token) {
+        
         return token;
       } else {
+        
         return getTokenFromAddress({ address: tokenOriginAddress, chain })
           .then((token) => {
+            
             fetchedTokens.current = [...fetchedTokens.current, token];
             return token;
           })
@@ -313,6 +317,7 @@ const TokensProvider: FC<PropsWithChildren> = (props) => {
   useEffect(() => {
     if (env) {
       const ethereumChain = env.chains[0];
+      const polygonZKEVMChain = env.chains[1];
       getEthereumErc20Tokens()
         .then((ethereumErc20Tokens) =>
           Promise.all(
@@ -321,8 +326,9 @@ const TokensProvider: FC<PropsWithChildren> = (props) => {
               .map((token) => addWrappedToken({ token }))
           )
             .then((chainTokens) => {
-              const tokens = [getEtherToken(ethereumChain), ...chainTokens];
+              const tokens = [getEtherToken(polygonZKEVMChain), getEtherToken(ethereumChain), ...chainTokens];
               cleanupCustomTokens(tokens);
+              
               setTokens(tokens);
             })
             .catch(notifyError)

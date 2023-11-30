@@ -1,4 +1,4 @@
-import { constants as ethersConstants } from "ethers";
+//import { constants as ethersConstants } from "ethers";
 import { FC } from "react";
 
 import { ReactComponent as CopyIcon } from "src/assets/icons/copy.svg";
@@ -57,9 +57,15 @@ export const TokenInfoTable: FC<TokenInfoTableProps> = ({ className, token }) =>
     </div>
   );
 
-  if (isTokenEther(token)) {
+  if (isTokenEther(token) && token.wrappedToken) {
     const ethereum = env.chains[0];
     const polygonZkEVM = env.chains[1];
+    let l1ShortAddress = getShortenedEthereumAddress(token.address);
+    let l2ShortAddress = getShortenedEthereumAddress(token.wrappedToken.address);
+    if (token.chainId === polygonZkEVM.chainId){
+      l1ShortAddress = getShortenedEthereumAddress(token.wrappedToken.address);
+      l2ShortAddress = getShortenedEthereumAddress(token.address);
+    }
 
     const ethereumRow = (
       <div className={classes.row}>
@@ -68,7 +74,7 @@ export const TokenInfoTable: FC<TokenInfoTableProps> = ({ className, token }) =>
           L1 token address
         </Typography>
         <Typography className={classes.alignRow} type="body1">
-          {getShortenedEthereumAddress(ethersConstants.AddressZero)}
+          {l1ShortAddress}
         </Typography>
       </div>
     );
@@ -80,7 +86,7 @@ export const TokenInfoTable: FC<TokenInfoTableProps> = ({ className, token }) =>
           L2 token address
         </Typography>
         <Typography className={classes.alignRow} type="body1">
-          {getShortenedEthereumAddress(ethersConstants.AddressZero)}
+          {l2ShortAddress}
         </Typography>
       </div>
     );

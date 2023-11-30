@@ -247,6 +247,7 @@ export const TokenList: FC<TokenListProps> = ({
                       <Typography type="body1">{token.name}</Typography>
                       <div className={classes.tokenBalanceWrapper}>
                         <TokenBalance
+                          chainId={token.chainId}
                           spinnerSize={16}
                           token={token}
                           typographyProps={{ className: classes.tokenBalance, type: "body2" }}

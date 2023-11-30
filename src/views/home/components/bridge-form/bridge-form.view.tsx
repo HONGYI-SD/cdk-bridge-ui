@@ -65,6 +65,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
 
       if (to) {
         setSelectedChains({ from, to });
+        setToken(getEtherToken(from));
         setChains(undefined);
         setAmount(undefined);
       }
@@ -124,7 +125,8 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
 
   const getTokenBalance = useCallback(
     (token: Token, chain: Chain): Promise<BigNumber> => {
-      if (isTokenEther(token)) {
+      if (isTokenEther(token) && chain.chainId === token.chainId) {
+      
         return chain.provider.getBalance(account);
       } else {
         return getErc20TokenBalance({
@@ -141,8 +143,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
     // Load all the tokens for the selected chain without their balance
     if (selectedChains && defaultTokens) {
       const { from } = selectedChains;
-      const chainTokens = [...getChainCustomTokens(from), ...defaultTokens];
-
+      const chainTokens = [...getChainCustomTokens(from),...defaultTokens];
       setTokens(
         chainTokens.map((token) => ({
           ...token,
@@ -209,7 +210,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
     if (selectedChains && token) {
       setBalanceFrom({ status: "loading" });
       setBalanceTo({ status: "loading" });
-
+     
       getTokenBalance(token, selectedChains.from)
         .then((balance) =>
           callIfMounted(() => {
@@ -240,7 +241,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
     if (env && connectedProvider.status === "successful" && formData === undefined) {
       const from = env.chains.find((chain) => chain.chainId === connectedProvider.data.chainId);
       const to = env.chains.find((chain) => chain.chainId !== connectedProvider.data.chainId);
-
+      
       if (from && to) {
         setSelectedChains({ from, to });
         setToken(getEtherToken(from));
@@ -274,7 +275,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
       <Card className={classes.card}>
         <div className={classes.row}>
           <div className={classes.leftBox}>
-            <Typography type="body2">From</Typography>
+            <Typography type="body2">From L1</Typography>
             <button
               className={classes.fromChain}
               onClick={() => setChains(env.chains)}
@@ -288,6 +289,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
           <div className={classes.rightBox}>
             <Typography type="body2">Balance</Typography>
             <TokenBalance
+              chainId= {selectedChains.from.chainId}
               spinnerSize={14}
               token={{ ...token, balance: balanceFrom }}
               typographyProps={{ type: "body1" }}
@@ -318,7 +320,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
       <Card className={classes.card}>
         <div className={classes.row}>
           <div className={classes.leftBox}>
-            <Typography type="body2">To</Typography>
+            <Typography type="body2">To L2</Typography>
             <div className={classes.toChain}>
               <selectedChains.to.Icon />
               <Typography type="body1">{selectedChains.to.name}</Typography>
@@ -327,8 +329,9 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
           <div className={classes.rightBox}>
             <Typography type="body2">Balance</Typography>
             <TokenBalance
+              chainId= {selectedChains.to.chainId}  
               spinnerSize={14}
-              token={{ ...token, balance: balanceTo }}
+              token={{ ...token,balance: balanceTo }}
               typographyProps={{ type: "body1" }}
             />
           </div>

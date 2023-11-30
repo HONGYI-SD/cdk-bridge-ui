@@ -215,7 +215,7 @@ const envToDomain = ({
     },
   }).then((chains) => {
     const ethereumChain = chains.find((chain) => chain.key === "ethereum");
-
+    
     if (!ethereumChain) {
       throw new Error("Ethereum chain not found");
     }
