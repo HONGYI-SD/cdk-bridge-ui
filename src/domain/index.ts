@@ -101,6 +101,7 @@ export interface RouterState {
 export enum EthereumChainId {
   MAINNET = 1,
   GOERLI = 5,
+  SEPO = 11155111,
 }
 
 export enum WalletName {

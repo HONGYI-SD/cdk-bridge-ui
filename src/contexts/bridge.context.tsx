@@ -293,7 +293,7 @@ const BridgeProvider: FC<PropsWithChildren> = (props) => {
         limit,
         offset,
       });
-
+      
       const deposits = await apiDeposits.reduce(
         async (acc: Promise<Deposit[]>, apiDeposit): Promise<Deposit[]> => {
           const {
@@ -748,21 +748,22 @@ const BridgeProvider: FC<PropsWithChildren> = (props) => {
       if (env === undefined) {
         throw new Error("Env is not available");
       }
-
+      
       if (!isAsyncTaskDataAvailable(connectedProvider)) {
         throw new Error("Connected provider is not available");
       }
 
       const { account, chainId, provider } = connectedProvider.data;
       const contract = Bridge__factory.connect(from.bridgeContractAddress, provider.getSigner());
+      
       const overrides: CallOverrides = {
-        value: isTokenEther(token) ? amount : undefined,
+        value: isTokenEther(token,from.chainId) ? amount : undefined,
         ...(gas
           ? gas.data
           : (await estimateBridgeGas({ destinationAddress, from, to, token, tokenSpendPermission }))
               .data),
       };
-
+      
       const executeBridge = async () => {
         const permitData =
           tokenSpendPermission.type === "permit"
@@ -850,9 +851,10 @@ const BridgeProvider: FC<PropsWithChildren> = (props) => {
         depositCount,
         networkId,
       });
-
+      
       const isTokenNativeOfToChain = token.chainId === to.chainId;
-      const isMetadataRequired = !isTokenEther(token) && !isTokenNativeOfToChain;
+      const isMetadataRequired = !isTokenEther(token,to.chainId) && !isTokenNativeOfToChain;
+      
       const metadata = isMetadataRequired
         ? await getErc20TokenEncodedMetadata({ chain: from, token })
         : "0x";

@@ -147,7 +147,7 @@ const isContractAllowedToSpendToken = async ({
   spender,
   token,
 }: IsContractAllowedToSpendTokenParams): Promise<boolean> => {
-  if (isTokenEther(token)) {
+  if (isTokenEther(token,from.chainId)) {
     throw new Error("Cannot check the allowance of ETH");
   }
 

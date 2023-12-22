@@ -125,8 +125,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
 
   const getTokenBalance = useCallback(
     (token: Token, chain: Chain): Promise<BigNumber> => {
-      if (isTokenEther(token) && chain.chainId === token.chainId) {
-      
+      if (isTokenEther(token,chain.chainId)) {
         return chain.provider.getBalance(account);
       } else {
         return getErc20TokenBalance({
@@ -275,7 +274,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
       <Card className={classes.card}>
         <div className={classes.row}>
           <div className={classes.leftBox}>
-            <Typography type="body2">From L1</Typography>
+            <Typography type="body2">From </Typography>
             <button
               className={classes.fromChain}
               onClick={() => setChains(env.chains)}
@@ -320,7 +319,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ account, formData, onResetForm
       <Card className={classes.card}>
         <div className={classes.row}>
           <div className={classes.leftBox}>
-            <Typography type="body2">To L2</Typography>
+            <Typography type="body2">To</Typography>
             <div className={classes.toChain}>
               <selectedChains.to.Icon />
               <Typography type="body1">{selectedChains.to.name}</Typography>

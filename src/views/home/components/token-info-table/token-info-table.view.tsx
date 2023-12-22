@@ -57,6 +57,9 @@ export const TokenInfoTable: FC<TokenInfoTableProps> = ({ className, token }) =>
     </div>
   );
 
+  //const L1GASTOKEN_ADDRESS    = "0xD9Cd520864f44af355B8907d049ca4C72e0943af";
+  //const L2WRAPPERETH_ADDRESS  = "0x1D7D61443bDDBAF058CC21fD06Fa185823750fff";
+
   if (isTokenEther(token) && token.wrappedToken) {
     const ethereum = env.chains[0];
     const polygonZkEVM = env.chains[1];

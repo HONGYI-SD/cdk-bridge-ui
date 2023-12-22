@@ -92,7 +92,7 @@ export const BridgeConfirmation: FC = () => {
           }
 
           const newMaxAmountConsideringFee = (() => {
-            if (isTokenEther(token)) {
+            if (isTokenEther(token,from.chainId)) {
               const amountConsideringFee = amount.add(newFee);
               const tokenBalanceRemainder = amountConsideringFee.sub(tokenBalance);
               const doesAmountExceedsTokenBalance = tokenBalanceRemainder.isNegative();
@@ -137,12 +137,13 @@ export const BridgeConfirmation: FC = () => {
 
   useEffect(() => {
     // Load the balance of the token when it's not available
+    
     if (formData?.token.balance && isAsyncTaskDataAvailable(formData.token.balance)) {
       setTokenBalance(formData.token.balance.data);
     } else if (formData && connectedProvider.status === "successful") {
       const { from, token } = formData;
 
-      if (isTokenEther(token)) {
+      if (isTokenEther(token,from.chainId)) {
         void from.provider
           .getBalance(connectedProvider.data.account)
           .then((balance) =>
@@ -177,10 +178,11 @@ export const BridgeConfirmation: FC = () => {
   }, [connectedProvider, formData, getErc20TokenBalance, notifyError, callIfMounted]);
 
   useEffect(() => {
+    
     if (connectedProvider.status === "successful" && formData) {
       const { amount, from, token } = formData;
 
-      if (isTokenEther(token)) {
+      if (isTokenEther(token,from.chainId)) {
         setTokenSpendPermission({ type: "none" });
       } else {
         isContractAllowedToSpendToken({
@@ -217,6 +219,7 @@ export const BridgeConfirmation: FC = () => {
   }, [formData, connectedProvider, notifyError, callIfMounted]);
 
   useEffect(() => {
+    
     if (
       connectedProvider.status === "successful" &&
       formData &&
@@ -227,12 +230,14 @@ export const BridgeConfirmation: FC = () => {
   }, [connectedProvider, formData]);
 
   useEffect(() => {
+    
     if (!formData) {
       navigate(routes.home.path);
     }
   }, [navigate, formData]);
 
   useEffect(() => {
+    
     if (formData) {
       const { from, token } = formData;
       const etherToken = getEtherToken(from);
@@ -242,7 +247,7 @@ export const BridgeConfirmation: FC = () => {
         .then((etherPrice) => {
           callIfMounted(() => {
             setEtherTokenFiatPrice(etherPrice);
-            if (isTokenEther(token)) {
+            if (isTokenEther(token,from.chainId)) {
               setBridgedTokenFiatPrice(etherPrice);
             }
           });
@@ -250,14 +255,15 @@ export const BridgeConfirmation: FC = () => {
         .catch(() =>
           callIfMounted(() => {
             setEtherTokenFiatPrice(undefined);
-            if (isTokenEther(token)) {
+            if (isTokenEther(token,from.chainId)) {
               setBridgedTokenFiatPrice(undefined);
             }
           })
         );
 
       // Get the fiat price of the bridged token when it's not Ether
-      if (!isTokenEther(token)) {
+      
+      if (!isTokenEther(token,from.chainId)) {
         getTokenPrice({ chain: from, token })
           .then((tokenPrice) => {
             callIfMounted(() => {
@@ -384,7 +390,7 @@ export const BridgeConfirmation: FC = () => {
       },
       FIAT_DISPLAY_PRECISION
     );
-
+  
   const fee = calculateMaxTxFee(estimatedGas.data);
   const fiatFee =
     env.fiatExchangeRates.areEnabled &&

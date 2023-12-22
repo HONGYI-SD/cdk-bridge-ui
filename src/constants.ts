@@ -50,16 +50,18 @@ export const PAGE_SIZE = 25;
 
 export const PENDING_TX_TIMEOUT = 30 * 60 * 1000; // 30min in ms
 
-export const BRIDGE_CALL_GAS_LIMIT_INCREASE_PERCENTAGE = 20; // 20%
+export const BRIDGE_CALL_GAS_LIMIT_INCREASE_PERCENTAGE = 40; // 20%
 
 export const BRIDGE_CALL_PERMIT_GAS_LIMIT_INCREASE = 100000;
 
-export const GAS_PRICE_INCREASE_PERCENTAGE = 50; // 50%
+export const GAS_PRICE_INCREASE_PERCENTAGE = 80; // 50%
 
 export const DEPOSIT_CHECK_WORD = "I understand";
 
 export const ETH_TOKEN_LOGO_URI =
-  "https://raw.githubusercontent.com/Uniswap/interface/main/src/assets/images/ethereum-logo.png";
+  "/icons/tokens/eth.svg";
+
+export const SHIBCHAIN_LOGO_URI = "/icons/tokens/SCX.png"
 
 export const POLYGON_SUPPORT_URL = "https://support.polygon.technology";
 
@@ -77,12 +79,12 @@ export const TOKEN_BLACKLIST = [
   "0x4F9A0e7FD2Bf6067db6994CF12E4495Df938E6e9",
 ];
 
-export const L1GASTOKEN_ADDRESS = "0x82109a709138A2953C720D3d775168717b668ba6";
-export const L2WRAPPERETH_ADDRESS = "0x82109a709138A2953C720D3d775168717b668ba6";
+//export const L1GASTOKEN_ADDRESS = ethers.constants.AddressZero;
+//export const L2WRAPPERETH_ADDRESS = ethers.constants.AddressZero;
+export const L1GASTOKEN_ADDRESS    = "0x9f885f12Cb3179817324839a035288b0D74D24FA";
+export const L2WRAPPERETH_ADDRESS  = "0x1D7D61443bDDBAF058CC21fD06Fa185823750fff";
 
-
-
-let L1CHAINID = 1;
+let L1CHAINID = 0;
 let L2CHAINID = 1;
 export const getChains = ({
   ethereum,
@@ -113,6 +115,7 @@ export const getChains = ({
     polygonZkEVMProvider.getNetwork().catch(() => Promise.reject(ProviderError.PolygonZkEVM)),
     poeContract.networkName().catch(() => Promise.reject(ProviderError.Ethereum)),
   ]).then(([ethereumNetwork, polygonZkEVMNetwork, polygonZkEVMNetworkName]) => {
+    
     L1CHAINID = ethereumNetwork.chainId;
     L2CHAINID = polygonZkEVMNetwork.chainId;
     return [
@@ -141,7 +144,7 @@ export const getChains = ({
       name: polygonZkEVMNetworkName,
       nativeCurrency: {
         decimals: 18,
-        name: "SHIB",
+        name: "Shiba Inu",
         symbol: "SHIB",
       },
       networkId: polygonZkEVM.networkId,
@@ -166,15 +169,15 @@ export const getEtherToken = (chain: Chain): Token => {
     }
   }else{
     return {
-      address: ethers.constants.AddressZero,
-      chainId: chain.chainId,
+      address: L1GASTOKEN_ADDRESS,
+      chainId: L1CHAINID,
       decimals: 18,
-      logoURI: ETH_TOKEN_LOGO_URI,
-      name: "SHIB",
+      logoURI: SHIBCHAIN_LOGO_URI,
+      name: "Shiba Inu",
       symbol: "SHIB",
       wrappedToken: {
-        address: L1GASTOKEN_ADDRESS,
-        chainId: L1CHAINID,
+        address: ethers.constants.AddressZero,
+        chainId: chain.chainId,
       }
     }
   }

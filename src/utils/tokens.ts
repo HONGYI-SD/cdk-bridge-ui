@@ -8,8 +8,18 @@ const selectTokenAddress = (token: Token, chain: Chain): string => {
     : token.address;
 };
 
-const isTokenEther = (token: Token): boolean => {
+/*const isTokenEther = (token: Token): boolean => {
   return token.address === ethersConstants.AddressZero;
+};*/
+
+const isTokenEther = (token: Token, chainId?:number): boolean => {
+  
+  if ( chainId !== token.chainId && token.wrappedToken){
+    return token.wrappedToken.address === ethersConstants.AddressZero;
+  }
+  return token.address === ethersConstants.AddressZero;
+  
+  
 };
 
 export { isTokenEther, selectTokenAddress };

@@ -257,9 +257,8 @@ const TokensProvider: FC<PropsWithChildren> = (props) => {
             token.wrappedToken.address === tokenOriginAddress &&
             token.wrappedToken.chainId === chain.chainId)
       );
-
+      
       if (token) {
-        
         return token;
       } else {
         
