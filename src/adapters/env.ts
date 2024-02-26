@@ -219,7 +219,10 @@ const envToDomain = ({
     if (!ethereumChain) {
       throw new Error("Ethereum chain not found");
     }
-
+    if (chains[1].key === "polygon-zkevm"){
+      chains[1].name = "Ryoshi"
+    }
+    
     return {
       bridgeApiUrl,
       chains,

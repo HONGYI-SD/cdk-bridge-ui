@@ -56,7 +56,7 @@ interface GetPermitParams {
 }
 
 const getPermit = ({ chain, token }: GetPermitParams): Promise<Permit> => {
-  if (isTokenEther(token)) {
+  if (isTokenEther(token,chain.chainId)) {
     return Promise.reject(new Error("Native currency does't require permit"));
   }
   const contract = Erc20__factory.connect(selectTokenAddress(token, chain), chain.provider);
@@ -106,7 +106,7 @@ const approve = async ({
   spender,
   token,
 }: ApproveParams): Promise<void> => {
-  if (isTokenEther(token)) {
+  if (isTokenEther(token,from.chainId)) {
     throw new Error("Cannot perform an approve on ETH");
   }
 
@@ -176,7 +176,7 @@ const permit = async ({
   token,
   value,
 }: PermitParams): Promise<string> => {
-  if (isTokenEther(token)) {
+  if (isTokenEther(token,from.chainId)) {
     throw new Error("Cannot perform a permit on ETH");
   }
 

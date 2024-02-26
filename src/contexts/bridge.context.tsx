@@ -674,6 +674,7 @@ const BridgeProvider: FC<PropsWithChildren> = (props) => {
       token,
       tokenSpendPermission,
     }: EstimateBridgeGasParams): Promise<Gas> => {
+      
       if (!env) {
         throw new Error("Env is not available");
       }
@@ -688,7 +689,9 @@ const BridgeProvider: FC<PropsWithChildren> = (props) => {
       const forceUpdateGlobalExitRoot =
         from.key === "polygon-zkevm" ? true : env.forceUpdateGlobalExitRootForL1;
 
-      const gasLimit =
+      
+
+      const gasLimit = BigNumber.from(800000)
         from.key === "ethereum"
           ? await contract.estimateGas
               .bridgeAsset(
@@ -712,6 +715,9 @@ const BridgeProvider: FC<PropsWithChildren> = (props) => {
                   : increasedGasLimit;
               })
           : BigNumber.from(300000);
+      
+            
+
 
       const { gasPrice, maxFeePerGas } = await from.provider.getFeeData();
 

@@ -66,7 +66,7 @@ export const NetworkBox: FC = () => {
   return (
     <Card>
       <div className={classes.networkBox}>
-        <Typography type="body1">{env.chains[1].name}</Typography>
+        <Typography type="body1">Ryoshi</Typography>
         <ul className={classes.list}>
           <li className={classes.listItem}>
             <Typography type="body2">

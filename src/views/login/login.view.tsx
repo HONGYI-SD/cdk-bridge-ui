@@ -94,14 +94,14 @@ export const Login: FC = () => {
         <ConfirmationModal
           message={
             <Typography type="body1">
-              DISCLAIMER: This version of the SHIBCHAIN will require frequent maintenance and
+              DISCLAIMER: This version of the Ryoshi Network will require frequent maintenance and
               may be restarted if upgrades are needed.
             </Typography>
           }
           onClose={() => setShowPolicyModal(false)}
           onConfirm={onConnectProvider}
           showCancelButton={false}
-          title={`Welcome to the SHIBCHAIN ${deploymentName || ""}`}
+          title={`Welcome to the Ryoshi Network ${deploymentName || ""}`}
         />
       )}
     </div>
