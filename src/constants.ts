@@ -81,8 +81,8 @@ export const TOKEN_BLACKLIST = [
 
 //export const L1GASTOKEN_ADDRESS = ethers.constants.AddressZero;
 //export const L2WRAPPERETH_ADDRESS = ethers.constants.AddressZero;
-export const L1GASTOKEN_ADDRESS    = "0xbF932b6fb6f241869DFdacE3c53f7bA79f4B194e";
-export const L2WRAPPERETH_ADDRESS  = "0x1af262816322506B39d8671acb68b76456F9CA9d";
+export const L1GASTOKEN_ADDRESS    = "0xcf41Fd1317CE3b7B04628548fCE038D7669cd521";
+export const L2WRAPPERETH_ADDRESS  = "0xc85eD3272cbFb78323bc93924DCe0C4bfB44e696";
 
 let L1CHAINID = 0;
 let L2CHAINID = 1;
